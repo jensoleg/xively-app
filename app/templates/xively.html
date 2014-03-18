@@ -1,0 +1,120 @@
+<div id="forecast" class="weather-box">
+    <div ng-show="activeStream != null">
+        <h4 class="title">{{datastreams[activeStream.id].name}}
+            {{datastreams[activeStream.id].current_value}}{{datastreams[activeStream.id].unit.symbol}}
+        </h4>
+        <!--i class="icon ion-arrow-up-c" style="font-size: 10px;"></i>{{datastreams[activeStream.id].max_value}}{{datastreams[activeStream.id].unit.symbol}}
+                    <i class="icon ion-arrow-down-c" style="font-size: 10px;"></i>{{datastreams[activeStream.id].min_value}}{{datastreams[activeStream.id].unit.symbol}}--><!--h5 style="position:relative; top:-50px; z-index:10">
+                        <span id="temp-hi"><i class="icon ion-arrow-up-c"></i> 2</span>&deg;</span>
+                        <span id="temp-lo"><i class="icon ion-arrow-down-c"></i> 3></span>&deg;</span>
+         </h5-->
+    </div>
+    <a id="3">
+        <div ng-show="chartData.length > 0">
+            <ion-slide-box show-pager="false" id="readings-scroll">
+                <ion-slide>
+                    <div style="height: 200px" dx-chart="{bindingOptions: {dataSource: 'chartSettings.dataSource'},
+                                                        argumentAxis: chartSettings.argumentAxis,
+                                                        valueAxis: chartSettings.valueAxis,
+                                                        legend: chartSettings.legend,
+                                                        tooltip: chartSettings.tooltip,
+                                                        series: chartSettings.series,
+                                                        crosshair: chartSettings.crosshair
+                                                       }"></div>
+                </ion-slide>
+                <ion-slide>
+                    <div style="height: 200px" dx-circular-gauge="{ bindingOptions: {subvalues : 'gaugeSettings.subvalues',
+                                                                       scale: 'gaugeSettings.scale',
+                                                                       value: 'gaugeSettings.value',
+                                                                       rangeContainer: 'gaugeSettings.rangeContainer'},
+                                                                       tooltip: gaugeSettings.tooltip,
+                                                                       subvalueIndicator: gaugeSettings.subvalueIndicator}"></div>
+                </ion-slide>
+            </ion-slide-box>
+        </div>
+        <a id="2"></a>
+
+        <div class="row" style="margin-top: 0px"
+             ng-repeat="readings in datastreams|orderObjectBy:'type':'reverse'">
+            <div class="col">
+                <label>{{readings.name}}</label>
+            </div>
+            <div class="col"
+                 style="padding: 5px;
+                        padding-top: 5px;
+                        padding-right: 0px;
+                        padding-bottom: 5px;
+                        padding-left: 0px;">
+                <i class="icon ion-arrow-graph-up-right"
+                   ng-show="readings.type == 'data'"
+                   ng-click="showData(readings.id)"
+                   ng-style="readings.id == activeStream.id && {'color': '#4a87ee'} || {'color': 'white'}"
+                   style="font-size: 30px">
+                </i>
+                <i class="icon ion-ios7-gear"
+                   ng-show="readings.type == 'ctrlValue' && !readings.isSelecting"
+                   ng-click="showValueCtrl(readings.id)"
+                   style="font-size: 30px">
+                </i>
+
+                <div ng-show="readings.isSelecting" class="range range-positive"
+                     style="padding: 2px 0px;
+                            padding-top: 2px;
+                            padding-right: 0px;">
+                    <input type="range"
+                           min="{{readings.minDomain}}"
+                           max="{{readings.maxDomain}}"
+                           value="readings.newValue"
+                           ng-model="readings.newValue"
+                           style="margin-top: 0px;
+                                  margin-bottom: 0px;
+                                  padding-right: 0px;
+                                  padding-left: 0px;
+                                  margin-right: 0px;
+                                  margin-left: 0px;
+                                  height: 20px">
+                </div>
+                <div ng-show="readings.type == 'ctrlSwitch'">
+                    <label class="checkbox" style="padding: 0px 0px">
+                        <input
+                                type="checkbox"
+                                style="width: 24px;height: 24px"
+                                ng-model="readings.current_value"
+                                ng-true-value="1"
+                                ng-false-value="0"
+                                ng-change="toggleCtrlSwitch(readings.id)">
+                    </label>
+                </div>
+            </div>
+            <div class="col">
+                <div ng-show="readings.type == 'data'">
+                    <span class="temp-high">{{readings.current_value}}{{readings.unit.symbol}}</span>
+                </div>
+                <div ng-show="readings.type == 'ctrlValue'">
+                    <div ng-show="readings.isSelecting">
+                        <span style="width: 60px;text-align: left;vertical-align: baseline">
+                        <i ng-click="closeValueCtrl(readings.id)"
+                           class="icon ion-close-circled"
+                           style="padding-right: 5px;padding-left: 2px;font-size: 24px">
+                        </i>
+                        <i ng-click="setValueCtrl(readings.id)" class="icon ion-checkmark-circled"
+                           style="padding-right: 2px;padding-left: 5px;font-size: 24px">
+                        </i>
+                        </span>
+                        <span class="temp-high"
+                              style="display: initial;">
+                            {{readings.newValue}}
+                        </span>
+                    </div>
+                    <span ng-hide="readings.isSelecting"
+                          class="temp-high">
+                        {{readings.newValue}}{{readings.unit.symbol}}
+                    </span></div>
+            </div>
+        </div>
+        <div class="clearfix"><a ng-href="http://www.wunderground.com/?apiref=126dd7440c68b6ca" target="_blank">
+            <div class="wunderground-logo"></div>
+        </a>
+        </div>
+    </a>
+</div>

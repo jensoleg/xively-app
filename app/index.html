@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html ng-app="XivelyApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>"Xively"</title>
+
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+
+    <!-- custom vendor CSS -->
+    <link rel="stylesheet" href="vendor/app.css">
+    <!-- end custom vendor CSS -->
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/ionic/release/css/ionic.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+</head>
+
+<body ng-controller="WeatherCtrl" animation="slide-left-right-ios7">
+<ion-pane id="wrapper">
+    <background-cycler class="bg-fade"></background-cycler>
+
+    <header id="header" class="bar bar-header bar-clear">
+        <h1 class="title">
+            <span class="city"><i id="city-nav-icon"
+                                  class="icon ion-navigate"></i> {{current.display_location.city}}</span><br>
+            <current-time localtz="current.local_tz_short"></current-time>
+        </h1>
+        <button ng-click="showSettings()" class="button button-icon"><i class="icon ion-gear-a"></i></button>
+    </header>
+
+    <ion-content scroll-event-interval="20" overflow-scroll="false" on-refresh="refreshData()" scrollbar-y="false">
+        <!--ion-content  overflow-scroll="false" on-refresh="refreshData()"  scrollbar-y="false"-->
+        <ion-refresher>
+        </ion-refresher>
+
+        <!--ion-scroll-refresher>
+            <i class="icon ion-arrow-down-c icon-pulling" style="color:white"></i>
+            <i class="icon ion-loading-c icon-refreshing" style="color:white"></i>
+        </ion-scroll-refresher-->
+
+        <div id="main-content">
+            <current-weather></current-weather>
+            <a id="1"></a>
+            <forecast ng-hide="viewXively"></forecast>
+            <xively ng-show="viewXively"></xively>
+        </div>
+    </ion-content>
+</ion-pane>
+
+<script id="settings.html" type="text/ng-template">
+    <div id="settings-modal" class="modal" ng-controller="SettingsCtrl">
+        <header class="bar bar-header bar-dark">
+            <h1 class="title">Settings</h1>
+            <button class="button button-clear" ng-click="closeSettings()">Close</button>
+        </header>
+        <ion-content has-header="true">
+            <div class="padding">
+                <div class="list">
+                    <label class="item item-input">
+                        <span class="input-label">Units</span>
+                        <ion-radio-buttons ng-model="settings.tempUnits">
+                            <button class="button button-positive ion-button-radio" ng-value="'f'">&deg;F</button>
+                            <button class="button button-positive ion-button-radio" ng-value="'c'">&deg;C</button>
+                        </ion-radio-buttons>
+                    </label>
+                    <label class="item item-input">
+                            <span class="input-label">Feed Time</span>
+                            <input ng-model="settings.feedHistory" type="number">
+                        </label>
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Xively key</span>
+                        <input ng-model="settings.keyXively" type="text">
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Xively feed</span>
+                        <input ng-model="settings.feedXively" type="text">
+                    </label>
+                </div>
+            </div>
+        </ion-content>
+    </div>
+</script>
+
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+
+<!-- build:js scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/ionic/release/js/ionic.js"></script>
+<script src="bower_components/ionic/release/js/ionic-angular.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/globalize/lib/globalize.js"></script>
+<script src="bower_components/lodash/dist/lodash.compat.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- custom vendor folder JS -->
+<script src="vendor/dx.chartjs.js"></script>
+<script src="vendor/xivelyjs-1.0.4.js"></script>
+<!-- end custom vendor JS -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/services.js"></script>
+<script src="scripts/directives.js"></script>
+<script src="scripts/filters.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>
